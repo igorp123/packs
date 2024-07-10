@@ -1,6 +1,6 @@
 class DrugsController < ApplicationController
   before_action :set_drug, only: %i[show]
-  before_action :set_firm, only: %i[index]
+  #before_action :set_firm, only: %i[index]
 
   def index
     @firms = Firm.all
