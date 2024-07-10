@@ -1,5 +1,5 @@
 class BatchesController < ApplicationController
-  before_action :set_drug, only: %i[show]
+  before_action :set_drug1, only: %i[show]
   before_action :set_batch, only: %i[show]
 
   def show
@@ -11,7 +11,7 @@ end
 
 private
 
-def set_drug
+def set_drug1
   @drug = Drug.find(params[:drug_id])
 end
 
