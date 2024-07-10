@@ -1,5 +1,9 @@
 <h1>Sgtins</h1>
 
-<% @sgtins.each do |sgtin| %>
-  <%= sgtin.number %>
+<% @firms.each do |firm| %>
+  <h4><%= firm.name %></h4>
+
+  <% sgtins_at_firm(@sgtins, firm).each do |sgtin| %>
+    <div><%= sgtin.number %></div>
+  <% end %>
 <% end %>

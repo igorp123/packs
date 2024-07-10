@@ -5,6 +5,7 @@ class BatchesController < ApplicationController
   def show
    # render plain: params
     @sgtins = Sgtin.where(batch: @batch)
+    @firms = Firm.all
   end
 end
 
