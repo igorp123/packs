@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root to: "drugs#index"
 
-  resources :drugs
+  resources :drugs do
+    resources :batches
+  end
 end

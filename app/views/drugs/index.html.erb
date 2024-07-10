@@ -6,7 +6,11 @@
     <tr>
       <th scope="col">Препарат</td>
       <th scope="col">GTIN</td>
-      <th scope="col">Количество</td>
+      <th scope="col">Общее количество</td>
+
+      <% @firms.each do |firm| %>
+        <th scope="col"><%= firm.name %></td>
+      <% end %>
      </tr>
   </thead>
   <tbody>
@@ -15,6 +19,10 @@
           <td> <%= link_to drug.name, drug %></td>
           <td> <%= link_to drug.gtin, drug %></td>
           <td> <%= drug.sgtin.count %> </td>
+
+          <% @firms.each do |firm| %>
+            <td> <%= quantity_at_firm(drug, firm) %> </td>
+          <% end %>
         </tr>
     <% end %>
   </tbody>
