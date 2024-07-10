@@ -16,7 +16,7 @@
   <tbody>
     <% @batches.each do |batch| %>
         <tr>
-          <td><%= batch.number %></td>
+          <td><%= link_to batch.number, drug_batches_path(@drug.id) %></td>
           <td><%= batch.formatted_expiration_date %></td>
           <td><%= batch.sgtin.count %></td>
 
