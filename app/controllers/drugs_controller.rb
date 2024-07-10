@@ -13,10 +13,10 @@ end
 
 private
 
-def drugs_params
-  params.require(:drug).permit(:name)
-end
+# def drugs_params
+#   params.require(:drug).permit(:name)
+# end
 
 def set_drug
-  @drug = Drug.find_by(params[:id])
+  @drug = Drug.find(params[:id])
 end

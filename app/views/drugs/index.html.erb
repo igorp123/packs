@@ -1,10 +1,21 @@
 <h1>Препараты</h1>
 
 <table class = "table table-bordered border-primary table-sm table-hover">
-  <% @drugs.each do |drug| %>
-      <tr>
-      <td> <%= link_to drug.name, drug %></td>
-      <td> <%= drug.sgtin.count %> </td>
-      </tr>
-  <% end %>
+  <table class = "table table-bordered border-primary table-sm table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Препарат</td>
+      <th scope="col">GTIN</td>
+      <th scope="col">Количество</td>
+     </tr>
+  </thead>
+  <tbody>
+    <% @drugs.each do |drug| %>
+        <tr>
+          <td> <%= link_to drug.name, drug %></td>
+          <td> <%= link_to drug.gtin, drug %></td>
+          <td> <%= drug.sgtin.count %> </td>
+        </tr>
+    <% end %>
+  </tbody>
 </table>
