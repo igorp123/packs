@@ -1,0 +1,26 @@
+<h1><%= @drug.name%></h1>
+
+<table class = "table table-bordered border-primary table-sm table-hover">
+  <thead>
+    <tr>
+      <th scope="col">sgtin</td>
+      <th scope="col">Статус</td>
+      <th scope="col">Дата статуса</td>
+      <th scope="col">Дата последней операции</td>
+      <th scope="col">Серия</td>
+      <th scope="col">Фирма</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sgtins.each do |sgtin| %>
+        <tr>
+          <td><%= sgtin.number %></td>
+          <td><%= sgtin.status %></td>
+          <td><%= sgtin.formatted_status_date %></td>
+          <td><%= sgtin.formatted_last_operation_date %></td>
+          <td><%= sgtin.batch.number %></td>
+          <td><%= sgtin.firm.name %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>

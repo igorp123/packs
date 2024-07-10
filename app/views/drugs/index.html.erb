@@ -1,0 +1,10 @@
+<h1>Препараты</h1>
+
+<table class = "table table-bordered border-primary table-sm table-hover">
+  <% @drugs.each do |drug| %>
+      <tr>
+      <td> <%= link_to drug.name, drug %></td>
+      <td> <%= drug.sgtin.count %> </td>
+      </tr>
+  <% end %>
+</table>
