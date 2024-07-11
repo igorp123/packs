@@ -1,6 +1,5 @@
 class DrugsController < ApplicationController
   before_action :set_drug, only: %i[show]
-  #before_action :set_firm, only: %i[index]
 
   def index
     @firms = Firm.all
@@ -20,9 +19,3 @@ private
 def set_drug
   @drug = Drug.find(params[:id])
 end
-
-
-# def set_firm
-#   return @firm = Firm.find(params[:firm_id]) if params[:firm_id].present?
-#   @firm = Firm.first
-# end

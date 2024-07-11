@@ -1,6 +1,7 @@
 class BatchesController < ApplicationController
   before_action :set_drug1, only: %i[show]
   before_action :set_batch, only: %i[show]
+  before_action :set_firm, only: %i[show]
 
   def show
    # render plain: params
@@ -8,7 +9,6 @@ class BatchesController < ApplicationController
     @firms = Firm.all
   end
 end
-
 
 private
 
@@ -18,4 +18,9 @@ end
 
 def set_batch
   @batch = @drug.batch.find(params[:id])
+end
+
+def set_firm
+  return @firm = Firm.find(params[:firm_id]) if params[:firm_id].present?
+  @firm = Firm.first
 end

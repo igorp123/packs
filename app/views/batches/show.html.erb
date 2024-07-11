@@ -1,9 +1,34 @@
-<h1>Sgtins</h1>
+<h3>Sgtins</h3>
 
-<% @firms.each do |firm| %>
-  <h4><%= firm.name %></h4>
-
-  <% sgtins_at_firm(@sgtins, firm).each do |sgtin| %>
-    <div><%= sgtin.number %></div>
+<ul class="navbar-nav">
+  <% @firms.each do |firm| %>
+    <li class="nav-item"><%= link_to firm.name, drug_batch_path(firm_id: firm)%></li>
   <% end %>
-<% end %>
+</ul>
+</nav>
+
+<h4><%= @firm.name %></h4>
+
+<table class = "table table-bordered border-primary table-sm table-hover">
+  <thead>
+    <tr>
+      <th scope="col">sgtin</td>
+      <th scope="col">Статус</td>
+      <th scope="col">Серия</td>
+      <th scope="col">Дата статуса</td>
+      <th scope="col">Дата последней операции</td>
+    </tr>
+  </thead>
+  <tbody>
+
+  <% sgtins_at_firm(@sgtins, @firm).each do |sgtin| %>
+      <tr>
+        <td><%= sgtin.number %></td>
+        <td><%= sgtin.status %></td>
+        <td><%= sgtin.batch.number %></td>
+        <td><%= sgtin.formatted_status_date %></td>
+        <td><%= sgtin.formatted_last_operation_date %></td>
+        </tr>
+  <% end %>
+  </tbody>
+</table>

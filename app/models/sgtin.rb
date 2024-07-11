@@ -10,5 +10,4 @@ class Sgtin < ApplicationRecord
   def formatted_last_operation_date
     last_operation_date.strftime('%d.%m.%Y')
   end
-
 end
