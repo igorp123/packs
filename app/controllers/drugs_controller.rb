@@ -3,13 +3,13 @@ class DrugsController < ApplicationController
 
   def index
     @firms = Firm.all
-    @drugs = Drug.all
+    @drugs = Drug.all.order(:name)
   end
 
   def show
     @firms = Firm.all
     @sgtins = @drug.sgtin.all
-    @batches = @drug.batch.all
+    @batches = @drug.batch.all.order(:number)
   end
 end
 

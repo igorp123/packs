@@ -1,4 +1,6 @@
-<h3>Sgtins</h3>
+<h4><%= @batch.drug.name %></h4>
+<h5>Серия: <%= @batch.number %></h5>
+<h6>Годен до: <%= @batch.formatted_expiration_date %></h6>
 
 <ul class="navbar-nav">
   <% @firms.each do |firm| %>
@@ -14,7 +16,6 @@
     <tr>
       <th scope="col">sgtin</td>
       <th scope="col">Статус</td>
-      <th scope="col">Серия</td>
       <th scope="col">Дата статуса</td>
       <th scope="col">Дата последней операции</td>
     </tr>
@@ -25,10 +26,11 @@
       <tr>
         <td><%= sgtin.number %></td>
         <td><%= sgtin.status %></td>
-        <td><%= sgtin.batch.number %></td>
         <td><%= sgtin.formatted_status_date %></td>
         <td><%= sgtin.formatted_last_operation_date %></td>
         </tr>
   <% end %>
   </tbody>
 </table>
+
+<%= link_to 'Назад', drug_path(@drug) %>
