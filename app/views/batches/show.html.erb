@@ -1,17 +1,17 @@
 <%= provide :page_title, 'SGTINs'%>
 
-<h4><%= @batch.drug.name %></h4>
+<h4><%= link_to @batch.drug.name, drug_path(@batch.drug) %></h4>
 <h5>Серия: <%= @batch.number %></h5>
 <h6>Годен до: <%= @batch.formatted_expiration_date %></h6>
 
 <div class="btn-gtoup mb-3">
   <%= link_to 'Скачать в формате xlsx', drug_batch_path(format: :zip),
-    class: 'btn btn-secondary' %>
+    class: 'btn btn-secondary btn-sm' %>
 </div>
 
-<ul class="navbar-nav">
+<ul class="nav mb-2">
   <% @firms.each do |firm| %>
-    <li class="nav-item"><%= link_to firm.name, drug_batch_path(firm_id: firm)%></li>
+    <li><%= link_to firm.name, drug_batch_path(firm_id: firm), class: 'nav-link px-2' %></li>
   <% end %>
 </ul>
 </nav>
@@ -38,5 +38,3 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to 'Назад', drug_path(@drug) %>

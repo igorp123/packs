@@ -8,8 +8,7 @@ class BatchesController < ApplicationController
     @firms = Firm.all
 
     respond_to do |format|
-      format.html do
-      end
+      format.html {}
 
       format.zip {respond_with_zip_sgtins}
     end
@@ -43,5 +42,5 @@ def respond_with_zip_sgtins
 
   compressed_filestream.rewind
 
-  send_data compressed_filestream.read, filename: "#{@drug.name}.zip"
+  send_data compressed_filestream.read, filename: "#{@drug.name[0..30]}.zip"
 end
