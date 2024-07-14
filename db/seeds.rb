@@ -24,7 +24,7 @@ end
   last_operation_date = status_date
   batch = Batch.all.sample
   drug = batch.drug
-  number = "#{drug.gtin}#{Faker::Barcode.ean_with_composite_symbology(13)}"
+  number = "#{drug.gtin}#{Faker::Barcode.ean(13)}"
   firm = Firm.all.sample
 
   Sgtin.create(

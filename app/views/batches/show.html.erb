@@ -4,6 +4,11 @@
 <h5>Серия: <%= @batch.number %></h5>
 <h6>Годен до: <%= @batch.formatted_expiration_date %></h6>
 
+<div class="btn-gtoup mb-3">
+  <%= link_to 'Скачать в формате xlsx', drug_batch_path(format: :zip),
+    class: 'btn btn-secondary' %>
+</div>
+
 <ul class="navbar-nav">
   <% @firms.each do |firm| %>
     <li class="nav-item"><%= link_to firm.name, drug_batch_path(firm_id: firm)%></li>
@@ -23,15 +28,14 @@
     </tr>
   </thead>
   <tbody>
-
-  <% sgtins_at_firm(@sgtins, @firm).each do |sgtin| %>
-      <tr>
-        <td><%= sgtin.number %></td>
-        <td><%= sgtin.status %></td>
-        <td><%= sgtin.formatted_status_date %></td>
-        <td><%= sgtin.formatted_last_operation_date %></td>
-        </tr>
-  <% end %>
+    <% sgtins_at_firm(@sgtins, @firm).each do |sgtin| %>
+        <tr>
+          <td><%= sgtin.number %></td>
+          <td><%= sgtin.status %></td>
+          <td><%= sgtin.formatted_status_date %></td>
+          <td><%= sgtin.formatted_last_operation_date %></td>
+          </tr>
+    <% end %>
   </tbody>
 </table>
 
