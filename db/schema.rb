@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_24_095823) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_24_165819) do
   create_table "batches", force: :cascade do |t|
     t.string "number"
     t.datetime "expiration_date"
@@ -25,6 +25,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_095823) do
     t.string "gtin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "mnn"
+    t.string "form_name"
+    t.string "form_doze"
   end
 
   create_table "firms", force: :cascade do |t|
