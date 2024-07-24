@@ -48,9 +48,9 @@ class ReadFromMdlp < ApplicationService
     #Drug.find_or_create_by(gtin: gtin, name: name)
 
     Drug.find_or_create_by(gtin: gtin) do |drug|
-      drug.name = name
-      drug.mnn = mnn
-      drug.form_name = form_name
+      drug.name = name.capitalize()
+      drug.mnn = mnn.capitalize()
+      drug.form_name = form_name.downcase()
       drug.form_doze = form_doze
     end
 

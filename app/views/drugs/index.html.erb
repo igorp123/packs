@@ -18,7 +18,7 @@
   <tbody>
     <% @drugs.each do |drug| %>
         <tr>
-          <td> <%= link_to drug.name, drug %></td>
+          <td> <%= link_to drug.full_name, drug %></td>
           <td> <%= drug.gtin %></td>
           <td> <%= drug.sgtin.count %> </td>
 
