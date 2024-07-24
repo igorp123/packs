@@ -13,7 +13,8 @@ class ReadFromMdlp < ApplicationService
     @client_id = connection_params['client_id']
     @client_secret = connection_params['client_secret']
     @auth_type = connection_params['auth_type']
-    @token = Token.first
+    @token = Token.first_or_create(token: '12345678', expiration_date: '01.01.2024',
+      last_operation_time: '01.01.2024')
   end
 
   def call
@@ -22,30 +23,35 @@ class ReadFromMdlp < ApplicationService
 
       authorise(connection_params)
 
-      response = read_sgtins_from_mdlp(start_position(firm))
+      total_records = read_sgtins_from_mdlp(start_position(firm))['total'].to_i
 
-      response['entries'].each do |entry|
-        puts "#{entry['sgtin']} #{entry['status']} #{entry['prod_name']} #{entry['last_tracing_op_date']}}"
+      while start_position(firm) <= total_records
+          sleep 5
 
-        producer = set_producer(entry['packing_inn'], entry['packing_name'])
+          response = read_sgtins_from_mdlp(start_position(firm))
 
-        drug = set_drug(entry['gtin'], entry['sell_name'], entry['prod_name'], entry['prod_form_name'],
-        entry['prod_d_name'], producer)
+          response['entries'].each do |entry|
+            puts "#{entry['sgtin']} #{entry['status']} #{entry['prod_name']} #{entry['last_tracing_op_date']}}"
 
-        batch = set_batch(entry['batch'], drug, entry['expiration_date'])
+            producer = set_producer(entry['packing_inn'], entry['packing_name'])
 
-        sgtin =
-          Sgtin.create(
-                        number: entry['sgtin'],
-                        drug: drug,
-                        batch: batch,
-                        status: translate_status(entry['status']),
-                        status_date: entry['status_date'],
-                        last_operation_date: entry['last_tracing_op_date'],
-                        firm: firm,
-                      )
-       end
+            drug = set_drug(entry['gtin'], entry['sell_name'], entry['prod_name'], entry['prod_form_name'],
+            entry['prod_d_name'], producer)
 
+            batch = set_batch(entry['batch'], drug, entry['expiration_date'])
+
+            sgtin =
+              Sgtin.create(
+                            number: entry['sgtin'],
+                            drug: drug,
+                            batch: batch,
+                            status: translate_status(entry['status']),
+                            status_date: entry['status_date'],
+                            last_operation_date: entry['last_tracing_op_date'],
+                            firm: firm,
+                          )
+           end
+      end
     #end
   end
 
@@ -69,7 +75,9 @@ class ReadFromMdlp < ApplicationService
   end
 
   def set_batch(batch_number, drug, expiration_date)
-    Batch.find_or_create_by(drug: drug, number: batch_number, expiration_date: expiration_date)
+    Batch.find_or_create_by(drug: drug, number: batch_number) do |batch|
+      batch.expiration_date = expiration_date
+    end
   end
 
   def connection_params
@@ -175,8 +183,8 @@ class ReadFromMdlp < ApplicationService
   end
 
   def translate_status(status)
-  return 'В обороте' if status == 'in_circulation'
+    return 'В обороте' if status == 'in_circulation'
 
-  'Отгружен'
+    'Отгружен'
   end
 end
