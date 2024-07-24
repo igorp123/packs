@@ -34,12 +34,17 @@ class ReadFromMdlp < ApplicationService
 
         batch = set_batch(entry['batch'], drug, entry['expiration_date'])
 
-        sgtin = Sgtin.create(number: entry['sgtin'], status: entry['status'], firm: firm,
-         batch: batch, drug: drug, last_operation_date: entry['last_tracing_op_date'],
-         status_date: entry['status_date'])
-
-        sgtin.save
-      end
+        sgtin =
+          Sgtin.create(
+                        number: entry['sgtin'],
+                        drug: drug,
+                        batch: batch,
+                        status: translate_status(entry['status']),
+                        status_date: entry['status_date'],
+                        last_operation_date: entry['last_tracing_op_date'],
+                        firm: firm,
+                      )
+       end
 
     #end
   end
@@ -53,7 +58,7 @@ class ReadFromMdlp < ApplicationService
   end
 
   def set_drug(gtin, name, mnn, form_name, form_doze, producer)
- 
+
     Drug.find_or_create_by(gtin: gtin) do |drug|
       drug.name = name.capitalize()
       drug.mnn = mnn.capitalize()
@@ -164,15 +169,14 @@ class ReadFromMdlp < ApplicationService
         {
           'start_from' => start,
           'count' => STEP,
-          'filter' => { "sys_id" => "00000000107321",
-                        "status" => ['in_circulation', 'in_realization'],
-                        #"batch" => "030321"
-                        # "gtin" => "00000046100146",
-                        #'' 'in_realization'
-                        #"last_tracing_op_date_to" => "2024-05-22"
-                        #"source" => 'primary'
-                      }
+          'filter' => { "status" => ['in_circulation', 'in_realization'] }
         }
       request_to_api(:post, url, headers, body)
+  end
+
+  def translate_status(status)
+  return 'В обороте' if status == 'in_circulation'
+
+  'Отгружен'
   end
 end
