@@ -26,6 +26,7 @@
       <th scope="col">Статус</td>
       <th scope="col">Дата статуса</td>
       <th scope="col">Дата последней операции</td>
+      <th scope="col"></td>
     </tr>
   </thead>
   <tbody>
@@ -35,6 +36,7 @@
           <td><%= sgtin.status %></td>
           <td><%= sgtin.formatted_status_date %></td>
           <td><%= sgtin.formatted_last_operation_date %></td>
+          <td><%= link_to 'Удалить', sgtin_path(sgtin), data: {method: :delete} %></td>
           </tr>
     <% end %>
   </tbody>

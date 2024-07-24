@@ -1,0 +1,2 @@
+module SgtinsHelper
+end
