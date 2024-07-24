@@ -3,16 +3,15 @@
 <h1>Препараты</h1>
 
 <table class = "table table-bordered border-primary table-sm table-hover">
-  <table class = "table table-bordered border-primary table-sm table-hover">
   <thead>
-    <tr>
+    <tr class="text-center align-text-top">
       <th scope="col">Препарат</td>
       <th scope="col">Производитель</td>
       <th scope="col">GTIN</td>
       <th scope="col">Общее количество</td>
 
       <% @firms.each do |firm| %>
-        <th scope="col"><%= firm.name %></td>
+        <th scope="col" class= 'text-center'><%= firm.name %></td>
       <% end %>
      </tr>
   </thead>
@@ -22,10 +21,10 @@
           <td> <%= link_to drug.full_name, drug %></td>
           <td> <%= drug.producer.name %></td>
           <td> <%= drug.gtin %></td>
-          <td> <%= drug.sgtin.count %> </td>
+          <td class="text-end"> <%= drug.sgtin.count %> </td>
 
           <% @firms.each do |firm| %>
-            <td> <%= quantity_at_firm(drug, firm) %> </td>
+            <td class="text-end"> <%= quantity_at_firm(drug, firm) %> </td>
           <% end %>
         </tr>
     <% end %>

@@ -50,7 +50,7 @@ class ReadFromMdlp < ApplicationService
                             last_operation_date: entry['last_tracing_op_date'],
                             firm: firm,
                           )
-           end
+          end
       end
     #end
   end
