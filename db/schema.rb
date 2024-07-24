@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_24_165819) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_24_174847) do
   create_table "batches", force: :cascade do |t|
     t.string "number"
     t.datetime "expiration_date"
@@ -28,11 +28,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_165819) do
     t.string "mnn"
     t.string "form_name"
     t.string "form_doze"
+    t.integer "producer_id", null: false
+    t.index ["producer_id"], name: "index_drugs_on_producer_id"
   end
 
   create_table "firms", force: :cascade do |t|
     t.string "name"
     t.string "mod"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "producers", force: :cascade do |t|
+    t.string "name"
+    t.string "inn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -61,6 +70,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_165819) do
   end
 
   add_foreign_key "batches", "drugs"
+  add_foreign_key "drugs", "producers"
   add_foreign_key "sgtins", "batches"
   add_foreign_key "sgtins", "drugs"
   add_foreign_key "sgtins", "firms"

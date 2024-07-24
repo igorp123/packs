@@ -1,6 +1,7 @@
 <%= provide :page_title, 'SGTINs'%>
 
 <h4><%= link_to @batch.drug.full_name, drug_path(@batch.drug) %></h4>
+<h6><%= @batch.drug.producer.name %></h6>
 <h5>Серия: <%= @batch.number %></h5>
 <h6>Годен до: <%= @batch.formatted_expiration_date %></h6>
 

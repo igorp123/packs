@@ -27,8 +27,10 @@ class ReadFromMdlp < ApplicationService
       response['entries'].each do |entry|
         puts "#{entry['sgtin']} #{entry['status']} #{entry['prod_name']} #{entry['last_tracing_op_date']}}"
 
+        producer = set_producer(entry['packing_inn'], entry['packing_name'])
+
         drug = set_drug(entry['gtin'], entry['sell_name'], entry['prod_name'], entry['prod_form_name'],
-        entry['prod_d_name'])
+        entry['prod_d_name'], producer)
 
         batch = set_batch(entry['batch'], drug, entry['expiration_date'])
 
@@ -44,19 +46,21 @@ class ReadFromMdlp < ApplicationService
 
   private
 
-  def set_drug(gtin, name, mnn, form_name, form_doze)
-    #Drug.find_or_create_by(gtin: gtin, name: name)
+  def set_producer(inn, name)
+    Producer.find_or_create_by(inn: inn) do |producer|
+      producer.name = name
+    end
+  end
 
+  def set_drug(gtin, name, mnn, form_name, form_doze, producer)
+ 
     Drug.find_or_create_by(gtin: gtin) do |drug|
       drug.name = name.capitalize()
       drug.mnn = mnn.capitalize()
       drug.form_name = form_name.downcase()
       drug.form_doze = form_doze
+      drug.producer = producer
     end
-
-
-
-
   end
 
   def set_batch(batch_number, drug, expiration_date)

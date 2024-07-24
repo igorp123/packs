@@ -7,6 +7,7 @@
   <thead>
     <tr>
       <th scope="col">Препарат</td>
+      <th scope="col">Производитель</td>
       <th scope="col">GTIN</td>
       <th scope="col">Общее количество</td>
 
@@ -19,6 +20,7 @@
     <% @drugs.each do |drug| %>
         <tr>
           <td> <%= link_to drug.full_name, drug %></td>
+          <td> <%= drug.producer.name %></td>
           <td> <%= drug.gtin %></td>
           <td> <%= drug.sgtin.count %> </td>
 
