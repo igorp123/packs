@@ -3,9 +3,9 @@
 
 class ReadFromMdlp < ApplicationService
   ENDPOINT = 'https://api.mdlp.crpt.ru/api'
-  CLIENT_SECRET = 'b36d13d9-867e-4c3f-98af-9e3f757c79cc'
-  CLIENT_ID = '2967d2f4-45b5-404b-b1b1-517e27eab732'
-  USER_ID = 'a0499e63-c023-4456-a640-5360075fd379'
+  CLIENT_SECRET = Rails.application.credentials.client_secret
+  CLIENT_ID = Rails.application.credentials.client_id
+  USER_ID = Rails.application.credentials.user_id
 
   OpenSSL::SSL.send(:remove_const, :VERIFY_PEER)
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
@@ -129,11 +129,11 @@ class ReadFromMdlp < ApplicationService
       else
         result = HTTParty.get(url, headers: headers)
       end
-
-      @token.update_attribute(:last_operation_time, Time.now)
     rescue
       abort 'Не удалось подключиться к API'
     end
+
+    @token.update_attribute(:last_operation_time, Time.now) if result.code == 200
 
     abort "#{result['error_description'] || result['error']}" unless result.code == 200
 
