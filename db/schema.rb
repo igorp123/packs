@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_09_131450) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_24_095823) do
   create_table "batches", force: :cascade do |t|
     t.string "number"
     t.datetime "expiration_date"
@@ -47,6 +47,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_09_131450) do
     t.index ["batch_id"], name: "index_sgtins_on_batch_id"
     t.index ["drug_id"], name: "index_sgtins_on_drug_id"
     t.index ["firm_id"], name: "index_sgtins_on_firm_id"
+  end
+
+  create_table "tokens", force: :cascade do |t|
+    t.string "token"
+    t.datetime "expiration_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_operation_time"
   end
 
   add_foreign_key "batches", "drugs"
