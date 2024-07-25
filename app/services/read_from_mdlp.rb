@@ -36,7 +36,7 @@ class ReadFromMdlp < ApplicationService
             producer = set_producer(entry['packing_inn'], entry['packing_name'])
 
             drug = set_drug(entry['gtin'], entry['sell_name'], entry['prod_name'], entry['prod_form_name'],
-            entry['prod_d_name'], producer)
+            entry['prod_d_name'], producer, entry['is_narcotic?'], entry['is_pku?'])
 
             batch = set_batch(entry['batch'], drug, entry['expiration_date'])
 
@@ -63,7 +63,7 @@ class ReadFromMdlp < ApplicationService
     end
   end
 
-  def set_drug(gtin, name, mnn, form_name, form_doze, producer)
+  def set_drug(gtin, name, mnn, form_name, form_doze, producer, is_narcotic, is_pku)
 
     Drug.find_or_create_by(gtin: gtin) do |drug|
       drug.name = name.capitalize()
@@ -71,6 +71,8 @@ class ReadFromMdlp < ApplicationService
       drug.form_name = form_name.downcase()
       drug.form_doze = form_doze
       drug.producer = producer
+      drug.is_narcotic = is_narcotic
+      drug.is_pku = is_pku
     end
   end
 

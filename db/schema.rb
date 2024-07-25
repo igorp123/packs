@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_24_174847) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_25_052032) do
   create_table "batches", force: :cascade do |t|
     t.string "number"
     t.datetime "expiration_date"
@@ -29,6 +29,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_174847) do
     t.string "form_name"
     t.string "form_doze"
     t.integer "producer_id", null: false
+    t.boolean "is_narcotic"
+    t.boolean "is_pku"
     t.index ["producer_id"], name: "index_drugs_on_producer_id"
   end
 

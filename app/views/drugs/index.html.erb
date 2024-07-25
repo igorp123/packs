@@ -17,7 +17,7 @@
   </thead>
   <tbody>
     <% @drugs.each do |drug| %>
-        <tr>
+        <tr class = "<%= drug.is_narcotic || drug.is_pku ? 'table-danger' : nil %>">
           <td> <%= link_to drug.full_name, drug %></td>
           <td> <%= drug.producer.name %></td>
           <td> <%= drug.gtin %></td>
