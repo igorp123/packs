@@ -32,8 +32,8 @@
     </tr>
   </thead>
   <tbody>
-    <% sgtins_at_firm(@sgtins, @firm).each do |sgtin| %>
-        <tr>
+    <% sgtins_at_firm(@sgtins, @firm).each_with_index do |sgtin, index| %>
+         <tr id="sgtin-<%= index %>">
           <td><%= sgtin.number %></td>
           <td><%= sgtin.status %></td>
           <td><%= sgtin.formatted_status_date %></td>
@@ -43,3 +43,5 @@
     <% end %>
   </tbody>
 </table>
+
+<%= link_to 'Назад', drug_path(@batch.drug)%>

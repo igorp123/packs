@@ -25,13 +25,17 @@ class ReadFromMdlp < ApplicationService
 
       total_records = read_sgtins_from_mdlp(start_position(firm))['total'].to_i
 
-      while start_position(firm) <= total_records
+      start = 1
+
+      while start <= total_records do
+          puts '--------------------------'
+          puts start
+          puts '--------------------------'
           sleep 5
 
-          response = read_sgtins_from_mdlp(start_position(firm))
+          response = read_sgtins_from_mdlp(start)
 
           response['entries'].each do |entry|
-            puts "#{entry['sgtin']} #{entry['status']} #{entry['prod_name']} #{entry['last_tracing_op_date']}}"
 
             producer = set_producer(entry['packing_inn'], entry['packing_name'])
 
@@ -51,6 +55,7 @@ class ReadFromMdlp < ApplicationService
                             firm: firm,
                           )
           end
+          start += STEP
       end
     #end
   end
@@ -120,9 +125,9 @@ class ReadFromMdlp < ApplicationService
   end
 
   def sign_code(code)
-    cert = OpenSSL::X509::Certificate.new(File.read('raj.crt'))
+    cert = OpenSSL::X509::Certificate.new(File.read('igor.crt'))
 
-    private_key = OpenSSL::PKey.read(File.read('raj.pem'))
+    private_key = OpenSSL::PKey.read(File.read('igor.pem'))
 
     sign_code = OpenSSL::PKCS7::sign(cert, private_key, code, [], OpenSSL::PKCS7::DETACHED)
 
@@ -179,7 +184,8 @@ class ReadFromMdlp < ApplicationService
         {
           'start_from' => start,
           'count' => STEP,
-          'filter' => { "status" => ['in_circulation', 'in_realization'] }
+          'filter' => { "status" => ['in_circulation', 'in_realization']#, "gtin" => "04602884013631",
+                      }
         }
       request_to_api(:post, url, headers, body)
   end

@@ -18,7 +18,7 @@
   </thead>
   <tbody>
     <% @batches.each do |batch| %>
-        <tr>
+        <tr class = "<%= batch.expiration_date <= Time.now ? 'table-warning' : nil %>">
           <td><%= link_to batch.number, drug_batch_path(@drug, batch) %></td>
           <td><%= batch.formatted_expiration_date %></td>
           <td><%= batch.sgtin.count %></td>

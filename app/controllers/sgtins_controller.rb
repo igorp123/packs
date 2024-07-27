@@ -1,10 +1,14 @@
 class SgtinsController < ApplicationController
   def destroy
-   @sgtin = Sgtin.find(params[:id])
-   @batch = @sgtin.batch
+  # render plain: params
+  @sgtin = Sgtin.find(params[:id])
+  @batch = @sgtin.batch
 
-   @sgtin.destroy
+  @sgtins = Sgtin.where(batch: @batch, firm: @sgtin.firm).map.with_index{ |e, i| i if e.number ==@sgtin.number }.compact
 
-   redirect_to drug_batch_path(@batch.drug, @batch)
+  #  @sgtin.destroy
+
+   render plain: @sgtins
+  #redirect_to drug_batch_path(@batch.drug, @batch)
   end
 end

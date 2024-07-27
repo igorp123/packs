@@ -1,6 +1,6 @@
 class Drug < ApplicationRecord
-  has_many :batch
-  has_many :sgtin
+  has_many :batch, dependent: :delete_all
+  has_many :sgtin, dependent: :delete_all
   belongs_to :producer
 
   def full_name
