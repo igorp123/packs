@@ -21,10 +21,10 @@
           <td> <%= link_to drug.full_name, drug %></td>
           <td> <%= drug.producer.name %></td>
           <td> <%= drug.gtin %></td>
-          <td class="text-end"> <%= drug.sgtin.count %> </td>
+          <td class="text-end"> <%= drug.sgtin.count %> / <%= BatchFirm.where(batch: Batch.where(drug: drug)).sum(&:quantity) %></td>
 
           <% @firms.each do |firm| %>
-            <td class="text-end"> <%= quantity_at_firm(drug, firm) %> </td>
+            <td class="text-end"> <%= quantity_at_firm(drug, firm) %> / <%= BatchFirm.where(batch: Batch.where(drug: drug), firm: firm).sum(&:quantity) %></td>
           <% end %>
         </tr>
     <% end %>

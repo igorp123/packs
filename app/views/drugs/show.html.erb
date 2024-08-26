@@ -21,10 +21,13 @@
         <tr class = "<%= batch.expiration_date <= Time.now ? 'table-warning' : nil %>">
           <td><%= link_to batch.number, drug_batch_path(@drug, batch) %></td>
           <td><%= batch.formatted_expiration_date %></td>
-          <td><%= batch.sgtin.count %></td>
+          <td><%= batch.sgtin.count %> / <%= BatchFirm.where(batch: batch).sum(&:quantity) %></td>
 
           <% @firms.each do |firm| %>
-            <td> <%= quantity_at_firm_by_bathes(batch.drug, firm, batch) %> </td>
+            <td> <%= "#{quantity_at_firm_by_bathes(batch.drug, firm, batch)}
+                     / #{quantity_at_firm_by_batches_mdlp(firm, batch)}"
+                 %>
+            </td>
           <% end %>
         </tr>
     <% end %>

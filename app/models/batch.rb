@@ -7,4 +7,6 @@ class Batch < ApplicationRecord
   def formatted_expiration_date
     expiration_date.strftime('%d.%m.%Y')
   end
+
+  scope :drug_owner, -> { where(drug: drug) }
 end
