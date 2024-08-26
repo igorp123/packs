@@ -23,41 +23,60 @@ class ReadFromMdlp < ApplicationService
 
       authorise(connection_params)
 
-      total_records = read_sgtins_from_mdlp(start_position(firm))['total'].to_i
+      #gtins = Gtin.all.order(:id)
 
-      start = 1
+      gtins = Gtin.where.not(total_rj: 0).or(Gtin.where(total_rj: nil))
 
-      while start <= total_records do
-          puts '--------------------------'
-          puts start
-          puts '--------------------------'
-          sleep 5
+      gtins.each do |gtin|
+        drug = Drug.find_by(gtin: gtin.number)
 
-          response = read_sgtins_from_mdlp(start)
+        if drug
+          next if gtin.total_rj && gtin.total_rj == Sgtin.where(drug: drug, firm: firm).count
 
-          response['entries'].each do |entry|
+          start = start_position(drug, firm)
+        else
+          start = 0
+        end
 
-            producer = set_producer(entry['packing_inn'], entry['packing_name'])
+        sleep 5
 
-            drug = set_drug(entry['gtin'], entry['sell_name'], entry['prod_name'], entry['prod_form_name'],
-            entry['prod_d_name'], producer, entry['is_narcotic?'], entry['is_pku?'])
+        total_records = read_sgtins_from_mdlp(start, gtin.number)['total'].to_i
 
-            batch = set_batch(entry['batch'], drug, entry['expiration_date'])
+        gtin.update_attribute(:total_rj, total_records)
 
-            sgtin =
-              Sgtin.create(
-                            number: entry['sgtin'],
-                            drug: drug,
-                            batch: batch,
-                            status: translate_status(entry['status']),
-                            status_date: entry['status_date'],
-                            last_operation_date: entry['last_tracing_op_date'],
-                            firm: firm,
-                          )
-          end
-          start += STEP
+        next if total_records == 0
+
+        while start <= total_records do
+            puts '--------------------------'
+            puts "#{start} / #{total_records}"
+            puts '--------------------------'
+            sleep 5
+
+            response = read_sgtins_from_mdlp(start, gtin.number)
+
+            response['entries'].each do |entry|
+
+              producer = set_producer(entry['packing_inn'], entry['packing_name'])
+
+              drug = set_drug(entry['gtin'], entry['sell_name'], entry['prod_name'], entry['prod_form_name'],
+              entry['prod_d_name'], producer, entry['is_narcotic?'], entry['is_pku?'])
+
+              batch = set_batch(entry['batch'], drug, entry['expiration_date'])
+
+              sgtin =
+                Sgtin.create(
+                              number: entry['sgtin'],
+                              drug: drug,
+                              batch: batch,
+                              status: translate_status(entry['status']),
+                              status_date: entry['status_date'],
+                              last_operation_date: entry['last_tracing_op_date'],
+                              firm: firm,
+                            )
+            end
+            start += STEP
+        end
       end
-    #end
   end
 
   private
@@ -169,11 +188,11 @@ class ReadFromMdlp < ApplicationService
     result
   end
 
-  def start_position(firm)
-    Sgtin.where(firm: firm).count + 1
+  def start_position(drug, firm)
+    Sgtin.where(drug: drug, firm: firm).count + 1
   end
 
-  def read_sgtins_from_mdlp(start)
+  def read_sgtins_from_mdlp(start, gtin)
     url = "#{ENDPOINT}/v1/reestr/sgtin/filter"
       headers =
       {
@@ -184,7 +203,8 @@ class ReadFromMdlp < ApplicationService
         {
           'start_from' => start,
           'count' => STEP,
-          'filter' => { "status" => ['in_circulation', 'in_realization']#, "gtin" => "04602884013631",
+          'filter' => { "status" => ['in_circulation', 'in_realization'],
+                         "gtin" => gtin
                       }
         }
       request_to_api(:post, url, headers, body)

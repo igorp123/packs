@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_25_052032) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_24_151044) do
   create_table "batches", force: :cascade do |t|
     t.string "number"
     t.datetime "expiration_date"
@@ -39,6 +39,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_25_052032) do
     t.string "mod"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "gtins", force: :cascade do |t|
+    t.string "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "total_rj"
   end
 
   create_table "producers", force: :cascade do |t|

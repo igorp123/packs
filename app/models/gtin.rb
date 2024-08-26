@@ -1,0 +1,2 @@
+class Gtin < ApplicationRecord
+end
