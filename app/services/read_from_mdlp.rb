@@ -28,12 +28,10 @@ class ReadFromMdlp < ApplicationService
   def read_drug_info
     drugs = Drug.all
 
-
-    drug = Drug.find_by(gtin: '04607007360128')
-    #drugs.each do |drug|
+    drugs.each do |drug|
       sleep 1
 
-      entry = read_gtin_info_from_mdlp('04607007360128')
+      entry = read_gtin_info_from_mdlp(drug.gtin)
 
       producer = set_producer_for_gtin_info(entry['glf_name'])
 
@@ -44,7 +42,7 @@ class ReadFromMdlp < ApplicationService
       drug.is_pku = entry['is_pku']
 
       drug.save
-    #end
+    end
   end
 
 
