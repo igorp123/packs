@@ -1,6 +1,6 @@
 class Drug < ApplicationRecord
-  has_many :batch, dependent: :delete_all
-  has_many :sgtin, dependent: :delete_all
+  has_many :batch, dependent: :destroy
+  has_many :sgtin, dependent: :destroy
   belongs_to :producer
 
   validates :gtin, presence: true, uniqueness: true

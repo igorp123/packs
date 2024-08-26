@@ -1,3 +1,3 @@
 class Producer < ApplicationRecord
-  has_many :drug, dependent: :delete_all
+  has_many :drug, dependent: :destroy
 end

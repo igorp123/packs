@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_24_151044) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_26_170544) do
+  create_table "batch_firms", force: :cascade do |t|
+    t.integer "batch_id", null: false
+    t.integer "firm_id", null: false
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_id", "firm_id"], name: "index_batch_firms_on_batch_id_and_firm_id", unique: true
+    t.index ["batch_id"], name: "index_batch_firms_on_batch_id"
+    t.index ["firm_id"], name: "index_batch_firms_on_firm_id"
+  end
+
   create_table "batches", force: :cascade do |t|
     t.string "number"
     t.datetime "expiration_date"
@@ -78,6 +89,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_24_151044) do
     t.datetime "last_operation_time"
   end
 
+  add_foreign_key "batch_firms", "batches"
+  add_foreign_key "batch_firms", "firms"
   add_foreign_key "batches", "drugs"
   add_foreign_key "drugs", "producers"
   add_foreign_key "sgtins", "batches"
