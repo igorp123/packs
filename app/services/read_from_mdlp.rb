@@ -18,10 +18,39 @@ class ReadFromMdlp < ApplicationService
   end
 
   def call
+    authorise(connection_params)
+
+    read_drug_info
+
+    #read_sgtin_from_reestr
+  end
+
+  def read_drug_info
+    drugs = Drug.all
+
+
+    drug = Drug.find_by(gtin: '04607007360128')
+    #drugs.each do |drug|
+      sleep 1
+
+      entry = read_gtin_info_from_mdlp('04607007360128')
+
+      producer = set_producer_for_gtin_info(entry['glf_name'])
+
+      drug.form_name = entry['prod_form_norm_name'].downcase()
+      drug.form_doze = entry['prod_d_norm_name'] == 'НЕ УКАЗАНО' ? entry['prod_d_name'] : entry['prod_d_norm_name']
+      drug.producer = producer
+      drug.is_narcotic = entry['is_narcotic']
+      drug.is_pku = entry['is_pku']
+
+      drug.save
+    #end
+  end
+
+
+  def read_sgtin_from_reestr
     #Firm.all.each do |firm|
       firm = Firm.first
-
-      authorise(connection_params)
 
       #gtins = Gtin.all.order(:id)
 
@@ -87,8 +116,11 @@ class ReadFromMdlp < ApplicationService
     end
   end
 
-  def set_drug(gtin, name, mnn, form_name, form_doze, producer, is_narcotic, is_pku)
+  def set_producer_for_gtin_info(name)
+    Producer.find_or_create_by(name: name)
+  end
 
+  def set_drug(gtin, name, mnn, form_name, form_doze, producer, is_narcotic, is_pku)
     Drug.find_or_create_by(gtin: gtin) do |drug|
       drug.name = name.capitalize()
       drug.mnn = mnn.capitalize()
@@ -208,6 +240,18 @@ class ReadFromMdlp < ApplicationService
                       }
         }
       request_to_api(:post, url, headers, body)
+  end
+
+  def read_gtin_info_from_mdlp(gtin)
+    url = "#{ENDPOINT}/v1/reestr/med_products/public/#{gtin}"
+
+    headers =
+     {
+        'Content-Type' => 'application/json',  'Authorization' => "token #{@token.token}"
+     }
+
+      body = { }
+      request_to_api(:get, url, headers, body)
   end
 
   def translate_status(status)
