@@ -8,21 +8,26 @@ class ReadFromMdlp < ApplicationService
   OpenSSL::SSL.send(:remove_const, :VERIFY_PEER)
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
-  def initialize
+  def initialize(gtin = nil, batch = nil, firm = nil)
     @user_id = connection_params['user_id']
     @client_id = connection_params['client_id']
     @client_secret = connection_params['client_secret']
     @auth_type = connection_params['auth_type']
     @token = Token.first_or_create(token: '12345678', expiration_date: '01.01.2024',
       last_operation_time: '01.01.2024')
+    @gtin = gtin
+    @batch = batch
+    @firm = firm
   end
 
   def call
     authorise(connection_params)
 
-    read_drug_info
-
-    #read_sgtin_from_reestr
+    if @gtin
+      read_sgtin_from_reestr(@gtin, @batch, @firm)
+    else
+      read_drug_info
+    end
   end
 
   def read_drug_info
@@ -45,8 +50,44 @@ class ReadFromMdlp < ApplicationService
     end
   end
 
+  def read_sgtin_from_reestr(gtin, batch, firm)
+        start = 0
 
-  def read_sgtin_from_reestr
+        sleep 5
+
+        total_records = read_sgtins_from_mdlp(start, gtin, batch.number, firm)['total'].to_i
+
+        #gtin.update_attribute(:total_rj, total_records)
+
+        #next if total_records == 0
+
+        while start <= total_records do
+            puts '--------------------------'
+            puts "#{start} / #{total_records}"
+            puts '--------------------------'
+            sleep 5
+
+            response = read_sgtins_from_mdlp(start, gtin, batch.number, firm)
+
+            drug = batch.drug
+
+            response['entries'].each do |entry|
+              sgtin =
+                Sgtin.create(
+                              number: entry['sgtin'],
+                              drug: drug,
+                              batch: batch,
+                              status: translate_status(entry['status']),
+                              status_date: entry['status_date'],
+                              last_operation_date: entry['last_tracing_op_date'],
+                              firm: firm,
+                            )
+            end
+            start += STEP
+        end
+  end
+
+  def read_sgtin_from_reestr_old()
     #Firm.all.each do |firm|
       firm = Firm.first
 
@@ -222,7 +263,10 @@ class ReadFromMdlp < ApplicationService
     Sgtin.where(drug: drug, firm: firm).count + 1
   end
 
-  def read_sgtins_from_mdlp(start, gtin)
+  def read_sgtins_from_mdlp(start, gtin, batch, firm)
+    puts '--------------------------'
+    puts batch
+    puts '---------------------------'
     url = "#{ENDPOINT}/v1/reestr/sgtin/filter"
       headers =
       {
@@ -234,7 +278,8 @@ class ReadFromMdlp < ApplicationService
           'start_from' => start,
           'count' => STEP,
           'filter' => { "status" => ['in_circulation', 'in_realization'],
-                         "gtin" => gtin
+                         "gtin" => gtin,
+                         "batch" => batch
                       }
         }
       request_to_api(:post, url, headers, body)

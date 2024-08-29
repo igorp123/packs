@@ -21,6 +21,8 @@
 
 <h4><%= @firm.name %></h4>
 
+<%= pagination @pagy %>
+
 <table class = "table table-bordered border-primary table-sm table-hover">
   <thead>
     <tr>
@@ -43,5 +45,7 @@
     <% end %>
   </tbody>
 </table>
+
+<%= pagination @pagy %>
 
 <%= link_to 'Назад', drug_path(@batch.drug)%>

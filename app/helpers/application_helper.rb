@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include Pagy::Frontend
   def full_title(page_title = "")
     base_title = "Packs"
 
@@ -7,5 +8,9 @@ module ApplicationHelper
     else
       base_title
     end
+  end
+
+  def pagination(obj)
+    raw(pagy_bootstrap_nav(obj)) if obj.pages > 1
   end
 end

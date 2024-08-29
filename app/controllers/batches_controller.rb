@@ -4,7 +4,7 @@ class BatchesController < ApplicationController
   before_action :set_firm, only: %i[show]
 
   def show
-    @sgtins = Sgtin.where(batch: @batch)
+    @pagy, @sgtins = pagy Sgtin.where(batch: @batch)
     @firms = Firm.all
 
     respond_to do |format|

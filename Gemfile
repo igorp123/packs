@@ -28,6 +28,8 @@ gem 'caxlsx', '~> 3.1'
 gem 'caxlsx_rails', '~> 0.6.4'
 gem 'rubyXL', '~> 3.4'
 gem 'activerecord-import', '~> 1.8'
+gem 'sidekiq', '~> 6.4'
+gem 'pagy', '~> 9'
 
 
 gem 'httparty', '~> 0.22'

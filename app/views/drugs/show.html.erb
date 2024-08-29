@@ -27,11 +27,11 @@
             <td> <%= "#{quantity_at_firm_by_bathes(batch.drug, firm, batch)}
                      / #{quantity_at_firm_by_batches_mdlp(firm, batch)}"
                  %>
+                 <%= link_to 'Загрузить', sgtins_path(batch: batch, firm: firm), method: :post %>
             </td>
           <% end %>
         </tr>
     <% end %>
   </tbody>
 </table>
-
 <%= link_to 'Назад', root_path %>

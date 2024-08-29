@@ -3,7 +3,7 @@ class DrugsController < ApplicationController
 
   def index
     @firms = Firm.all
-    @drugs = Drug.all.order(:name)
+    @pagy, @drugs = pagy Drug.all.order(:name)
   end
 
   def show
