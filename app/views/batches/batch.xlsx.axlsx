@@ -2,7 +2,7 @@ wb = xlsx_package.workbook
 
 firms.each do |firm|
   wb.add_worksheet(name: "#{firm.name}") do |sheet|
-    sgtins_at_firm(sgtins, firm).each do |sgtin|
+    sgtins_at_firm(@sgtins_all, firm).each do |sgtin|
       sheet.add_row [sgtin.number, sgtin.status, sgtin.status_date], types: [:string]
     end
   end

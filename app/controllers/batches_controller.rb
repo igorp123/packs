@@ -5,6 +5,7 @@ class BatchesController < ApplicationController
 
   def show
     @pagy, @sgtins = pagy Sgtin.where(batch: @batch)
+    @sgtins_all = Sgtin.where(batch: @batch)
     @firms = Firm.all
 
     respond_to do |format|

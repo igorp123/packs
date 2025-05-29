@@ -1,8 +1,8 @@
 class ReadFromMdlp < ApplicationService
   ENDPOINT = 'https://api.mdlp.crpt.ru/api'
-  CLIENT_SECRET = Rails.application.credentials.client_secret
-  CLIENT_ID = Rails.application.credentials.client_id
-  USER_ID = Rails.application.credentials.user_id
+  CLIENT_SECRET = Rails.application.credentials.client_secret_rj
+  CLIENT_ID = Rails.application.credentials.client_id_rj
+  USER_ID = Rails.application.credentials.user_id_rj
   STEP = 100
 
   OpenSSL::SSL.send(:remove_const, :VERIFY_PEER)
@@ -277,7 +277,7 @@ class ReadFromMdlp < ApplicationService
         {
           'start_from' => start,
           'count' => STEP,
-          'filter' => { "status" => ['in_circulation', 'in_realization'],
+          'filter' => { "status" => ['in_circulation'], #, 'in_realization'],
                          "gtin" => gtin,
                          "batch" => batch
                       }
